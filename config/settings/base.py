@@ -49,6 +49,13 @@ THIRD_PARTY_APPS = [
     'allauth',  # registration
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
+    'allauth.socialaccount.providers.facebook', #facebook registration(all auth 문서 참조)
+    'rest_framework',  #REST Framework
+    'rest_framework.authtoken',
+    'taggit',  #Tags for the photos
+    'taggit_serializer',  #Tags serializer
+    'rest_auth',  #rest_auth
+    'rest_auth.registration',  #enalble registration
 ]
 
 # Apps specific for this project go here.
@@ -56,6 +63,8 @@ LOCAL_APPS = [
     # custom users app
     'sean.users.apps.UsersConfig',
     # Your stuff: custom apps go here
+    'sean.images.apps.ImagesConfig',
+    'sean.notifications.apps.NotificationsConfig' #notification app
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -99,7 +108,7 @@ EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.s
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = [
-    ("""sean""", 'sean.kim74'),
+    ("""sean""", 'sean.kim84'),
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
@@ -152,7 +161,8 @@ TEMPLATES = [
         ],
         'OPTIONS': {
             # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-debug
-            'debug': DEBUG,
+            'debug':
+            DEBUG,
             # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-loaders
             # https://docs.djangoproject.com/en/dev/ref/templates/api/#loader-types
             'loaders': [
@@ -251,8 +261,8 @@ AUTHENTICATION_BACKENDS = [
 
 # Some really nice defaults
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = False # email이 필수 조건이 아님을 알려준다.
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 ACCOUNT_ALLOW_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
 ACCOUNT_ADAPTER = 'sean.users.adapters.AccountAdapter'
@@ -261,8 +271,6 @@ SOCIALACCOUNT_ADAPTER = 'sean.users.adapters.SocialAccountAdapter'
 # Custom user app defaults
 # Select the correct user model
 AUTH_USER_MODEL = 'users.User'
-LOGIN_REDIRECT_URL = 'users:redirect'
-LOGIN_URL = 'account_login'
 
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
@@ -273,3 +281,18 @@ ADMIN_URL = r'^admin/'
 
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
+TAGGIT_CASE_INSENSITIVE = True  # taggit(hashtag) 대소문자 구분 안한다.
+
+REST_FRAMEWORK = { #default로 모든 request는 승인이 필요하다고 설정.(api를 보호하기 위해서,가입-로그인 외에는 승인과정이 필요)
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': ( #jwt와 함께 작동됨
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        #'rest_framework.authentication.SessionAuthentication',
+        #'rest_framework.authentication.BasicAuthentication', 둘다 더는 사용하지 않는다.
+    ),
+} #이와 같이 많은 승인 메커니즘을 가지고 있는 것이 좋다. jwt는 앱, frontend를 위해 설치해두고, 베이직은 어드민을 위해 사용할 수 있다.
+
+REST_USE_JWT = True  # jwt를 활성화
+ACCOUNT_LOGOUT_ON_GET = True  #get으로 로그아웃 한다.

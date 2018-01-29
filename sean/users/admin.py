@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from .models import User
 
 
-class MyUserChangeForm(UserChangeForm):
+class MyUserChangeForm(UserChangeForm): #user update 시 사용하는 form
     class Meta(UserChangeForm.Meta):
         model = User
 
@@ -32,8 +32,9 @@ class MyUserCreationForm(UserCreationForm):
 class MyUserAdmin(AuthUserAdmin):
     form = MyUserChangeForm
     add_form = MyUserCreationForm
-    fieldsets = (
-            ('User Profile', {'fields': ('name',)}),
+    fieldsets = ( #여기서 filed를 추가할 수 있다.
+            ('User Profile', {
+                'fields': ('name','followers','following','profile_image','bio','website')}),
     ) + AuthUserAdmin.fieldsets
     list_display = ('username', 'name', 'is_superuser')
     search_fields = ['name']

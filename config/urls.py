@@ -4,22 +4,22 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
+from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home'),
-    url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
-
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, admin.site.urls),
-
-    # User management
+    # User management (url을 포함시키고 싶다면 여기에도 추가해야 한다.)
+    url(r'^rest-auth/', include('rest_auth.urls')),
+    url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^users/', include('sean.users.urls', namespace='users')),
+    url(r'^images/', include('sean.images.urls', namespace='images')),
+    url(r'^notifications/', include('sean.notifications.urls', namespace='notifications')),
     url(r'^accounts/', include('allauth.urls')),
 
     # Your stuff: custom urls includes go here
-
-
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(
+    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
