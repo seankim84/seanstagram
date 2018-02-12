@@ -93,7 +93,7 @@ class UserProfile(APIView):
 
         elif found_user.username != user.username: #찾은 유저가 해당 페이지를 요청한 유저와 다르다면
 
-            return Response(status=status.HTTP_401_UNAUTHORIZED) #해당 사용자가 아닌경우 권한을 주지 않는다.
+            return Response(status=status.HTTP_400_BAD_REQUEST) #해당 사용자가 아닌경우 권한을 주지 않는다.
 
         else: #위의 모든 사항에 해당이 안된다면 serializer 작업을 한다.
 
@@ -197,7 +197,7 @@ class ChangePassword(APIView):
 
         else:
 
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter

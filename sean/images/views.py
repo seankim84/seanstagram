@@ -163,11 +163,11 @@ class Search(APIView):
 
     def get(self, request, format=None):
 
-        hashtags = request.query_params.get('hashtags', None)
+        hashtags = request.query_params.get('hashtags', None) #parmas가 여러개라도 get으로 가져올 수 있다.
 
         if hashtags is not None: #query prameter에 'hash'태그가 없다면 오류가 뜬다.=None split
 
-            hashtags = hashtags.split(",")
+            hashtags = hashtags.split(",") #params array 생성
 
             images = models.Image.objects.filter(tags__name__in=hashtags).distinct() #deep relationship을 검색하는 방법, distinct() => 검색결과가 겹치지 않게 해준다.
 
@@ -226,13 +226,13 @@ class ImageDetail(APIView):
         image = self.find_own_image(image_id, user)
 
         if image is None :
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         try:
             image = models.Image.objects.get(id = image_id, creator = user)
 
         except models.Image.DoesNotExist:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         serializer = serializers.InputImageSerializer(image, data = request.data, partial=True) #serializer의 3가지 필드를 모두 충족시키지 않아도 괜찮다. 즉 부분적으로 수정이 가능하다.
 
@@ -255,7 +255,7 @@ class ImageDetail(APIView):
         image = self.find_own_image(image_id, user)
 
         if image is None :
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         image.delete()
 

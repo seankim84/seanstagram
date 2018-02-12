@@ -1,0 +1,25 @@
+export const translations = {
+  'ko': {
+    'Username': '이름',
+    'Password': '비밀번호',
+    'Log in': '로그인',
+    'Forgot Password': '비밀번호를 잊어버렸습니까',
+    'Sign up to see photos and videos from your friends.': '가입해서 친구들에게 사진과 비디오를 보여주세요',
+    'Log in with Facebook': '',
+    'Email': '이메일',
+    'Full Name': '성명',
+    'Sign up': '가입하기',
+    'About Us': '우리에 관해',
+    'Support': '지원',
+    'Blog': '블로그',
+    'Press': '인쇄',
+    'API': '어플리케이션',
+    'Jobs': '일자리',
+    'Privacy': '개인정보 보호',
+    'Terms': '용어',
+    'Directory': '사전',
+    'Language': '언어',
+  },
+  'options': {
+  },
+}

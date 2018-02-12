@@ -5,29 +5,39 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
 from rest_framework_jwt.views import obtain_jwt_token
+from sean import views
 
 urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, admin.site.urls),
     # User management (url을 포함시키고 싶다면 여기에도 추가해야 한다.)
-    url(r'^rest-auth/', include('rest_auth.urls')),
+    url(r'^rest-auth/', include('rest_auth.urls')), 
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^users/', include('sean.users.urls', namespace='users')),
     url(r'^images/', include('sean.images.urls', namespace='images')),
-    url(r'^notifications/', include('sean.notifications.urls', namespace='notifications')),
+    url(r'^notifications/',
+        include('sean.notifications.urls', namespace='notifications')),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^', views.ReactAppView.as_view()), #catch all url => request가 url을 매칭하지 못하면, catch all로 이동한다.(모든 url을 잡아줌)
+    #ReactAppView = 어떤 url이든 ReactAppView로 가야한다.
 
     # Your stuff: custom urls includes go here
-] + static(
-    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
+    url(r'^', views.ReactAppView.as_view()),
+]
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
     # these url in browser to see how these error pages look like.
     urlpatterns += [
-        url(r'^400/$', default_views.bad_request, kwargs={'exception': Exception('Bad Request!')}),
-        url(r'^403/$', default_views.permission_denied, kwargs={'exception': Exception('Permission Denied')}),
-        url(r'^404/$', default_views.page_not_found, kwargs={'exception': Exception('Page not Found')}),
+        url(r'^400/$', default_views.bad_request,
+            kwargs={'exception': Exception('Bad Request!')}),
+        url(r'^403/$', default_views.permission_denied,
+            kwargs={'exception': Exception('Permission Denied')}),
+        url(r'^404/$', default_views.page_not_found,
+            kwargs={'exception': Exception('Page not Found')}),
         url(r'^500/$', default_views.server_error),
     ]
     if 'debug_toolbar' in settings.INSTALLED_APPS:
